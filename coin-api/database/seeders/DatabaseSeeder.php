@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
     {
         try {
             DB::beginTransaction();
+            
             foreach (config('permission.permissions') as $role => $permissions) {
                 $role = Role::firstOrCreate(['name' => $role, 'guard_name' => 'sanctum']);
 
@@ -29,11 +30,6 @@ class DatabaseSeeder extends Seeder
                     $role->givePermissionTo($permission);
                 }
             }
-
-            User::factory()->count(100)->make()->each(function ($user) {
-                $user->save();
-                $user->assignRole(RoleEnum::USER);
-            });
 
             DB::commit();
         } catch (Exception $e) {
