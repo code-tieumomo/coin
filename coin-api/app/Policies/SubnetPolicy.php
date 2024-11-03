@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\RoleEnum;
 use App\Models\Subnet;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -29,7 +30,7 @@ class SubnetPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -37,7 +38,7 @@ class SubnetPolicy
      */
     public function update(User $user, Subnet $subnet): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -45,7 +46,7 @@ class SubnetPolicy
      */
     public function delete(User $user, Subnet $subnet): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -53,7 +54,7 @@ class SubnetPolicy
      */
     public function restore(User $user, Subnet $subnet): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -61,6 +62,6 @@ class SubnetPolicy
      */
     public function forceDelete(User $user, Subnet $subnet): bool
     {
-        return false;
+        return true;
     }
 }

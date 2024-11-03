@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\PrivateNotification;
 use App\Models\Notification;
 use App\Models\Subnet;
+use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -53,5 +54,26 @@ class SubnetController extends Controller
         } catch (\Throwable $th) {
             return $this->error($th->getMessage(), 500);
         }
+    }
+
+    public function authenticate(Subnet $subnet, Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string',
+        ]);
+
+        $token = $request->get('token');
+        $user = User::where('token', $token)->first();
+        if (!$user) {
+            return $this->error('Invalid token.', 401);
+        }
+
+        $isJoined = $user->subnets()->where('subnet_id', $subnet->id)->exists();
+
+        if (!$isJoined) {
+            return $this->error('User is not joined to the subnet.', 401);
+        }
+
+        return $this->success(null, 'User authenticated successfully.');
     }
 }

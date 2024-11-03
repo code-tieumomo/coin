@@ -15,12 +15,13 @@ Route::get('/auth/{provider}/redirect', [AuthController::class, 'redirectToProvi
 Route::get('/auth/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/subnets/{subnet}/authenticate', [SubnetController::class, 'authenticate']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/auth/role', [AuthController::class, 'role']);
 
-    Route::get('/subnets', [SubnetController::class, 'index'])->can('viewAny', Subnet::class);    
+    Route::get('/subnets', [SubnetController::class, 'index'])->can('viewAny', Subnet::class);
     Route::get('/subnets/{subnet}', [SubnetController::class, 'show'])->can('view', 'subnet');
     Route::post('/subnets/{subnet}/join', [SubnetController::class, 'join']);
 });
