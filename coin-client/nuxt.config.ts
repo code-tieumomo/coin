@@ -26,7 +26,8 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/tailwindcss",
     "shadcn-nuxt",
-    "@nuxt/icon"
+    "@nuxt/icon",
+    "@vueuse/nuxt"
   ],
 
   shadcn: {
