@@ -18,8 +18,21 @@ onMounted(() => {
   $echo.private("private-notification." + user.id)
     .listen("PrivateNotification", (e) => {
       toast[e.type || "info"](e.title, {
-        description: e.content
+        description: e.content,
+        closeButton: true,
+        duration: 1000000
       });
+    });
+
+  $echo.join("online")
+    .here(users => {
+      authStore.online = users;
+    })
+    .joining(user => {
+      authStore.online.push(user);
+    })
+    .leaving(user => {
+      authStore.online = authStore.online.filter(u => (u.id !== user.id));
     });
 });
 
@@ -35,7 +48,7 @@ const logout = async () => {
         <NuxtLink to="/">
           <h1 class="flex items-center gap-2 font-semibold text-lg">
             <Icon name="hugeicons:bitcoin-cpu" class="w-6 h-6"/>
-            Coin
+            Intern
           </h1>
         </NuxtLink>
 
@@ -53,8 +66,6 @@ const logout = async () => {
           <span class="text-gray-300">|</span>
           <Badge>{{ user.role?.toUpperCase() || "???" }}</Badge>
           <span class="text-gray-300">|</span>
-          <!--<Icon name="hugeicons:notification-03" class="w-5 h-5 text-gray-500"/>-->
-          <!--<span class="text-gray-300">|</span>-->
           <DropdownMenu>
             <DropdownMenuTrigger>
               <div class="flex items-center gap-2">
@@ -66,7 +77,7 @@ const logout = async () => {
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{{ user.email }}</DropdownMenuLabel>
               <DropdownMenuSeparator/>
               <DropdownMenuItem class="cursor-pointer" @click="logout">Logout</DropdownMenuItem>
             </DropdownMenuContent>

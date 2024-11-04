@@ -11,7 +11,7 @@ const { $auth } = useNuxtApp();
 const route = useRoute();
 const router = useRouter();
 
-let provider = route.params.provider;
+let provider = route.params.provider as string;
 provider = provider.charAt(0).toUpperCase() + provider.slice(1);
 
 onMounted(async () => {

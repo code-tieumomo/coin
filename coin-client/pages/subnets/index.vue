@@ -61,7 +61,6 @@ const joinSubnet = async (id: number) => {
     }
   } catch (e) {
     console.error(e);
-  } finally {
     isJoining.value = false;
   }
 };
@@ -86,7 +85,7 @@ const joinSubnet = async (id: number) => {
           <p class="text-left text-sm text-gray-500">{{ subnet.description }}</p>
         </NuxtLink>
         <Popover v-else>
-          <PopoverTrigger class="w-full">
+          <PopoverTrigger class="w-full h-full">
             <div
               class="h-full w-full cursor-pointer rounded-xl border border-gray-300 bg-white p-4 shadow-sm transition-all hover:border-foreground hover:shadow-lg">
               <h3 class="mb-4 flex items-center gap-2 text-lg font-semibold">

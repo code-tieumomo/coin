@@ -56,6 +56,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
               localStorage.setItem("token", data.token);
               localStorage.setItem("user", JSON.stringify(data.user));
 
+              const { $echo } = useNuxtApp();
+              $echo.connector.options.auth.headers.Authorization = `Bearer ${ data.token }`;
+
               return true;
             }
             return false;

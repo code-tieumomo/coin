@@ -3,15 +3,22 @@ import { Toaster } from "@/components/ui/sonner";
 
 useHead({
   titleTemplate: (titleChunk) => {
-    return titleChunk ? `${ titleChunk } - Coin` : "Coin";
-  }
+    return titleChunk ? `${ titleChunk } - Intern` : "Intern";
+  },
+  link: [
+    {
+      rel: "icon",
+      type: "image/png",
+      href: "https://img.icons8.com/cotton/64/graduation-cap--v2.png"
+    }
+  ]
 });
 </script>
 
 <template>
   <div>
     <NuxtLayout>
-      <NuxtPage :keepalive="true"/>
+      <NuxtPage/>
     </NuxtLayout>
     <Toaster position="top-right" rich-colors :duration="5000"/>
   </div>

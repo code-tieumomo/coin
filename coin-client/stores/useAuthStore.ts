@@ -17,16 +17,18 @@ export const useAuthStore = defineStore("auth", {
   state: () => (<{
     user: User | null,
     token: string | null,
-    loading: boolean
+    loading: boolean,
+    online: [] | null
   } | null>{
     user: null,
     token: null,
-    loading: false
+    loading: false,
+    online: []
   }),
 
   getters: {
     isAuthenticated: (state) => !!state.token,
-    getUser: (state) => state.user
+    getUser: (state): User => state.user
   },
 
   actions: {
@@ -79,7 +81,7 @@ export const useAuthStore = defineStore("auth", {
           this.token = token;
           // Verify token and get fresh user data
           const config = useRuntimeConfig();
-          await useFetch(`${ config.public.apiBase }/auth/logout`, {
+          await $fetch(`${ config.public.apiBase }/auth/logout`, {
             headers: {
               "Authorization": `Bearer ${ token }`
             },
