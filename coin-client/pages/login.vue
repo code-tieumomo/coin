@@ -21,7 +21,7 @@ const handleLogin = async () => {
     <div class="w-1/2 bg-neutral-900 p-12 text-white flex flex-col justify-between">
       <h1 class="flex items-center gap-2">
         <Icon name="hugeicons:bitcoin-cpu" class="w-6 h-6"/>
-        Coin
+        Intern
       </h1>
 
       <p class="text-sm w-5/6">

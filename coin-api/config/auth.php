@@ -112,4 +112,6 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    'public_api_key' => env('X_PUBLIC_API_KEY', 'IMTA@2024'),
+
 ];

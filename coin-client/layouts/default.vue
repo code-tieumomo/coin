@@ -9,12 +9,31 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "vue-sonner";
+import NotificationDrawer from "~/components/NotificationDrawer.vue";
+import { format } from "date-fns";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Terminal } from "lucide-vue-next";
+import TimeTracker from "~/components/TimeTracker.vue";
 
 const authStore = useAuthStore();
 const user = authStore.getUser;
-const { $auth, $echo } = useNuxtApp();
+const { $auth, $echo, $api } = useNuxtApp();
 
-onMounted(() => {
+const isOpenDrawer = ref(false);
+const notifications = ref([]);
+
+const closeDrawer = () => {
+  isOpenDrawer.value = false;
+};
+
+const fetchNotifications = async () => {
+  const response = await $api.get("/notifications") as { data: [] };
+  notifications.value = response.data;
+};
+
+onMounted(async () => {
+  await fetchNotifications();
+
   $echo.private("private-notification." + user.id)
     .listen("PrivateNotification", (e) => {
       toast[e.type || "info"](e.title, {
@@ -22,6 +41,8 @@ onMounted(() => {
         closeButton: true,
         duration: 1000000
       });
+
+      notifications.value.unshift(e);
     });
 
   $echo.join("online")
@@ -53,6 +74,8 @@ const logout = async () => {
         </NuxtLink>
 
         <div class="flex items-center gap-4">
+          <!--<TimeTracker/>-->
+          <!--<span class="text-gray-300">|</span>-->
           <nav class="text-sm">
             <ul class="flex items-center gap-4">
               <li>
@@ -65,6 +88,9 @@ const logout = async () => {
           </nav>
           <span class="text-gray-300">|</span>
           <Badge>{{ user.role?.toUpperCase() || "???" }}</Badge>
+          <span class="text-gray-300">|</span>
+          <Icon name="hugeicons:notification-03" class="w-5 h-5 text-gray-500 cursor-pointer"
+                @click="isOpenDrawer = !isOpenDrawer;"/>
           <span class="text-gray-300">|</span>
           <DropdownMenu>
             <DropdownMenuTrigger>
@@ -89,6 +115,25 @@ const logout = async () => {
       <slot></slot>
     </main>
     <footer></footer>
+
+    <NotificationDrawer :is-open="isOpenDrawer" @close="closeDrawer">
+      <div class="flex items-center justify-between">
+        <h2 class="font-semibold">Notifications</h2>
+        <Icon name="mdi:close" class="w-4 h-4 cursor-pointer" @click="closeDrawer"/>
+      </div>
+      <div v-if="notifications.length > 0" class="mt-8 space-y-4">
+        <Alert v-for="notification in notifications" :key="notification.id"
+               :variant="['error', 'warning'].includes(notification.type) ? 'destructive': 'default'">
+          <Terminal class="h-4 w-4"/>
+          <AlertTitle>{{ notification.title }}</AlertTitle>
+          <AlertDescription>
+            <p class="text-xs mb-2">{{ format(new Date(notification.created_at), "dd/MM/yyyy") }}</p>
+            <p>{{ notification.content }}</p>
+          </AlertDescription>
+        </Alert>
+        <div class="text-center">...</div>
+      </div>
+    </NotificationDrawer>
   </div>
 </template>
 

@@ -103,7 +103,7 @@ export const useActivityTracking = () => {
         sessions: sessions.value
       });
 
-      if (response.ok) {
+      if (response) {
         lastSyncTime.value = Date.now();
         sessions.value = []; // Clear synced sessions
         saveTimeData();

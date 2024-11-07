@@ -3,31 +3,14 @@ import { useActivityTracking } from "~/composables/useActivityTracking";
 
 const {
   isActive,
-  formattedTotalTime,
-  activeStatus,
-  currentSession,
-  formatTime
+  formattedTotalTime
 } = useActivityTracking();
 </script>
 
 <template>
-  <div class="activity-tracker" :class="{ 'is-active': isActive }">
-    <div class="status-indicator">
-      <div class="status-dot" :class="{ 'active': isActive }"></div>
-      <span class="status-text">{{ activeStatus }}</span>
-    </div>
-
-    <div class="time-display">
-      <div class="label">Today's Active Time</div>
-      <div class="value">{{ formattedTotalTime }}</div>
-    </div>
-
-    <div v-if="currentSession" class="current-session">
-      <div class="label">Current Session</div>
-      <div class="value">
-        {{ formatTime(currentSession.duration) }}
-      </div>
-    </div>
+  <div class="time-display flex items-center text-xs gap-2 border rounded-full px-2 py-0.5">
+    <div class="w-2 h-2 rounded-full" :class="isActive ? 'bg-green-500 animate-pulse' : 'bg-red-500'"></div>
+    <div class="value">{{ formattedTotalTime }}</div>
   </div>
 </template>
 

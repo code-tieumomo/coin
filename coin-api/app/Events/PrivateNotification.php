@@ -48,6 +48,7 @@ class PrivateNotification implements ShouldBroadcast
             'title' => $this->notification->title,
             'content' => $this->notification->content,
             'type' => $this->notification->type,
+            'created_at' => $this->notification->created_at,
         ];
     }
 }

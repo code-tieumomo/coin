@@ -44,7 +44,8 @@ class SubnetResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\ViewColumn::make('icon')
-                    ->view('filament_columns.icon'),
+                    ->view('filament.pages.subnets.icon')
+                    ->alignCenter(),
                 Tables\Columns\TextColumn::make('provider_embed_url')
                     ->label('Provider Embed URL')
                     ->searchable(),

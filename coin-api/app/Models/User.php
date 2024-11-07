@@ -76,4 +76,19 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Subnet::class);
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function grades()
+    {
+        return $this->hasMany(Grade::class);
+    }
+
+    public function assignments()
+    {
+        return $this->belongsToMany(Assignment::class);
+    }
 }

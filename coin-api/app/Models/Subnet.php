@@ -18,4 +18,14 @@ class Subnet extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    public function assignments()
+    {
+        return $this->belongsToMany(Assignment::class)->withPivot('weight', 'needed');
+    }
+
+    public function grades()
+    {
+        return $this->hasMany(Grade::class);
+    }
 }

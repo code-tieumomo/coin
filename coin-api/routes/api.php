@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GradeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SubnetController;
 use App\Http\Controllers\UserTimeController;
+use App\Http\Middleware\CheckPublicApiKey;
 use App\Models\Subnet;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
@@ -16,7 +20,11 @@ Route::any('/auth/{provider}/redirect', [AuthController::class, 'redirectToProvi
 Route::any('/auth/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/subnets/{subnet}/authenticate', [SubnetController::class, 'authenticate']);
+
+Route::middleware(CheckPublicApiKey::class)->group(function () {
+    Route::post('/subnets/{subnet}/authenticate', [SubnetController::class, 'authenticate']);
+    Route::post('/grade/subnet', [GradeController::class, 'store']);
+});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/auth/logout', [AuthController::class, 'logout']);
@@ -27,4 +35,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/subnets', [SubnetController::class, 'index'])->can('viewAny', Subnet::class);
     Route::get('/subnets/{subnet}', [SubnetController::class, 'show'])->can('view', 'subnet');
     Route::post('/subnets/{subnet}/join', [SubnetController::class, 'join']);
+
+    Route::get('/notifications', [NotificationController::class, 'index']);
+
+    Route::get('/assignments', [AssignmentController::class, 'index']);
 });
