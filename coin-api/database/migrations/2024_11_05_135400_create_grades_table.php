@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('grade', 5, 2);
             $table->text('comment')->nullable();
             $table->timestamp('graded_at')->nullable();
-            $table->timestamps('submitted_at')->nullable();
+            $table->timestamp('submitted_at')->nullable();
             $table->timestamps();
         });
     }
