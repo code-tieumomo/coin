@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AssignmentResource\Pages;
 
 use App\Filament\Resources\AssignmentResource;
 use App\Models\Assignment;
+use App\Models\Subnet;
 use App\Models\User;
 use DB;
 use Filament\Actions;
@@ -49,6 +50,9 @@ class CreateAssignment extends CreateRecord
                 : collect($data['users'])->map(fn($item) => intval($item))->values()->toArray();
             if (!empty($users)) {
                 $assignment->users()->sync($users);
+                $assignment->subnets->each(function (Subnet $subnet) use ($users) {
+                    $subnet->users()->syncWithoutDetaching($users);
+                });
             }
 
             DB::commit();

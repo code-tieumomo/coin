@@ -13,6 +13,7 @@
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
         "opcodesio/log-viewer": "^3.11",
+        "spatie/laravel-markdown": "^2.5",
         "spatie/laravel-permission": "^6.9"
     },
     "require-dev": {

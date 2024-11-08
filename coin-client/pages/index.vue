@@ -3,22 +3,13 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Terminal } from "lucide-vue-next";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { useClipboard } from "@vueuse/core";
-import rehypeStringify from "rehype-stringify";
-import remarkGfm from "remark-gfm";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import { unified } from "unified";
-import rehypeShiki from "@shikijs/rehype";
 import { Progress } from "~/components/ui/progress";
-
-const processor = unified()
-  .use(remarkParse)
-  .use(remarkGfm)
-  .use(remarkRehype, { allowDangerousHtml: true })
-  .use(rehypeShiki, {
-    theme: "github-dark-high-contrast"
-  })
-  .use(rehypeStringify);
+import markdownit from "markdown-it";
+import { fromHighlighter } from "@shikijs/markdown-it/core";
+import { createHighlighterCore } from "shiki/core";
+import type { Assignment } from "~/types/Assignment";
+import type ListResponse from "~/types/ListResponse";
+import type { Subnet } from "~/types/Subnet";
 
 definePageMeta({
   middleware: ["auth"]
@@ -26,25 +17,39 @@ definePageMeta({
 
 const authStore = useAuthStore();
 const source = ref(authStore.user?.token);
-const { text, copy, copied, isSupported } = useClipboard({ source });
+const { copy, copied, isSupported } = useClipboard({ source });
 const { $api } = useNuxtApp();
+const md = markdownit();
+const highlighter = await createHighlighterCore({
+  themes: [
+    import("shiki/themes/github-dark-dimmed.mjs")
+  ],
+  langs: [
+    import("shiki/langs/python.mjs")
+  ],
+  loadWasm: import("shiki/wasm")
+});
+md.use(fromHighlighter(highlighter, {
+  // theme: "github-dark-high-contrast"
+  theme: "github-dark-dimmed"
+}));
 
-const assignments = ref([]);
-const fetchingAssignments = ref(false);
+const assignments = ref<Assignment[]>([]);
+const fetchingAssignments = ref<boolean>(false);
 
 const fetchAssignments = async () => {
   fetchingAssignments.value = true;
   try {
-    const response = await $api.get("/assignments") as { data: [] };
-    assignments.value = await Promise.all(response.data.map(async (item) => {
-      item.description = await processor.process(item.description);
-      item.subnets.forEach(subnet => {
+    const response: ListResponse<Assignment> = await $api.get("/assignments");
+    assignments.value = response.data?.map((item) => {
+      // item.description = await processor.process(item.description);
+      item.subnets.forEach((subnet: Subnet) => {
         const totalGrades = subnet.grades.reduce((acc, grade) => acc + Number(grade.grade), 0);
         subnet.progress = totalGrades / subnet.needed * 100;
         subnet.is_completed = totalGrades >= subnet.needed;
       });
       return item;
-    }));
+    });
   } finally {
     fetchingAssignments.value = false;
   }
@@ -108,7 +113,7 @@ fetchAssignments();
             <span class="font-semibold">{{ assignment.title }}</span>
           </CardHeader>
           <CardContent>
-            <article v-html="assignment.description" class="prose w-full max-w-full"/>
+            <article v-html="md.render(assignment.description)" class="prose w-full max-w-full"/>
             <hr class="my-4">
             <div v-if="assignment.subnets.length > 0" class="mt-4 space-y-4">
               <div v-for="subnet in assignment.subnets" :key="subnet.id" :class="{ 'opacity-20': subnet.is_completed }">

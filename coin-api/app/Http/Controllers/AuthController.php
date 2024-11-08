@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Traits\ApiResponse;
 use Arr;
 use Exception;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -58,6 +59,8 @@ class AuthController extends Controller
                         'token' => Str::random(32),
                     ]);
                     $user->assignRole(RoleEnum::USER);
+
+                    event(new Registered($user));
                 } else {
                     $user->update([
                         'google_id' => $googleId,

@@ -88,6 +88,9 @@ class EditAssignment extends EditRecord
                 : collect($data['users'])->map(fn($item) => intval($item))->values()->toArray();
             if (!empty($users)) {
                 $record->users()->sync($users);
+                $record->subnets->each(function (Subnet $subnet) use ($users) {
+                    $subnet->users()->attach($users);
+                });
             }
 
             DB::commit();

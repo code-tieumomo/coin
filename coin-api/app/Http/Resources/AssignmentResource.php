@@ -19,7 +19,7 @@ class AssignmentResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'start_date' => $this->start_date,
-            'end_date'=> $this->end_date,
+            'end_date' => $this->end_date,
             'is_public' => $this->is_public,
             'subnets' => SubnetResource::collection($this->whenLoaded('subnets')),
         ];

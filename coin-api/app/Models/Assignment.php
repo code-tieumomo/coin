@@ -20,6 +20,11 @@ class Assignment extends Model
             ->where('end_date', '>=', now());
     }
 
+    public function scopePublic($query)
+    {
+        return $query->where('is_public', true);
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class);
