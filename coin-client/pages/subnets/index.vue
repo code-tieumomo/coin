@@ -78,8 +78,8 @@ const joinSubnet = async (id: number) => {
         <NuxtLink v-if="subnet.is_joined"
                   :to="`/subnets/${subnet.id}`"
                   class="block h-full w-full cursor-pointer rounded-xl border border-gray-300 bg-white p-4 shadow-sm transition-all hover:border-foreground hover:shadow-lg">
-          <h3 class="mb-4 flex items-center gap-2 text-lg font-semibold">
-            <Icon :name="subnet.icon || 'heroicons-solid:server'" class="h-5 w-5"/>
+          <h3 class="mb-4 flex items-baseline gap-2 text-lg font-semibold">
+            <Icon :name="subnet.icon || 'heroicons-solid:server'" class="h-5 w-5 shrink-0 translate-y-1"/>
             {{ subnet.name }}
           </h3>
           <p class="text-left text-sm text-gray-500">{{ subnet.description }}</p>
@@ -88,19 +88,21 @@ const joinSubnet = async (id: number) => {
           <PopoverTrigger class="w-full h-full">
             <div
               class="h-full w-full cursor-pointer rounded-xl border border-gray-300 bg-white p-4 shadow-sm transition-all hover:border-foreground hover:shadow-lg">
-              <h3 class="mb-4 flex items-center gap-2 text-lg font-semibold">
-                <Icon :name="subnet.icon || 'heroicons-solid:server'" class="h-5 w-5"/>
+              <h3 class="mb-4 flex items-baseline gap-2 text-lg font-semibold">
+                <Icon :name="subnet.icon || 'heroicons-solid:server'" class="h-5 w-5 shrink-0 translate-y-1"/>
                 {{ subnet.name }}
               </h3>
               <p class="text-left text-sm text-gray-500">{{ subnet.description }}</p>
             </div>
           </PopoverTrigger>
           <PopoverContent>
-            Join this subnet?
-            <Button size="xs" @click="joinSubnet(subnet.id)" :disabled="isJoining">
-              <Icon v-if="isJoining" name="svg-spinners:90-ring-with-bg" class="w-5 h-5 mr-2"></Icon>
-              Confirm
-            </Button>
+            <div class="flex items-center gap-2">
+              Join this subnet?
+              <Button size="xs" @click="joinSubnet(subnet.id)" :disabled="isJoining">
+                <Icon v-if="isJoining" name="svg-spinners:90-ring-with-bg" class="w-5 h-5 mr-2"></Icon>
+                Confirm
+              </Button>
+            </div>
           </PopoverContent>
         </Popover>
       </div>

@@ -54,7 +54,7 @@ const changeRole = (value: string | number | undefined) => {
       </h1>
 
       <div class="flex items-center gap-2">
-        <div class="flex items-center gap-1" v-if="!role">
+        <div class="flex items-center gap-1 bounce-horizontal mr-4" v-if="!role">
           <span class="text-sm">
             Pick a role to continue
           </span>
@@ -91,5 +91,18 @@ const changeRole = (value: string | number | undefined) => {
 </template>
 
 <style scoped>
+@keyframes bounce-horizontal {
+  0%, 100% {
+    transform: translateX(0);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateX(20px);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
 
+.bounce-horizontal {
+  animation: bounce-horizontal 2.5s infinite;
+}
 </style>

@@ -10,6 +10,7 @@ import { createHighlighterCore } from "shiki/core";
 import type { Assignment } from "~/types/Assignment";
 import type ListResponse from "~/types/ListResponse";
 import type { Subnet } from "~/types/Subnet";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 definePageMeta({
   middleware: ["auth"]
@@ -25,7 +26,8 @@ const highlighter = await createHighlighterCore({
     import("shiki/themes/github-dark-dimmed.mjs")
   ],
   langs: [
-    import("shiki/langs/python.mjs")
+    import("shiki/langs/python.mjs"),
+    import("shiki/langs/bash.mjs")
   ],
   loadWasm: import("shiki/wasm")
 });
@@ -83,53 +85,60 @@ fetchAssignments();
       </AlertDescription>
     </Alert>
 
-    <Card class="mt-8">
-      <CardHeader class="font-semibold">
-        Online ({{ authStore.online?.length }})
-      </CardHeader>
-      <CardContent>
-        <div class="flex w-full flex-wrap gap-8">
-          <div class="flex items-center gap-2" v-for="user in authStore.online">
-            <span class="text-sm">
-              {{ user.name }}
-            </span>
-            <img class="h-8 w-8 rounded-full border-2 border-gray-300"
-                 :src="`https://ui-avatars.com/api/?name=${ user.name }`" alt="">
+    <div class="grid grid-cols-12 gap-8">
+      <div class="col-span-9">
+        <h3 class="text-xl font-semibold mt-8">Assignments</h3>
+        <Transition name="page" mode="out-in">
+          <div v-if="fetchingAssignments" class="mt-4">
+            <Skeleton class="h-4 w-[300px]"/>
+            <Skeleton class="h-4 w-[250px] mt-2"/>
+            <Skeleton class="h-4 w-[200px] mt-2"/>
           </div>
-        </div>
-      </CardContent>
-    </Card>
-
-    <h3 class="text-xl font-semibold mt-8">Assignments</h3>
-    <Transition name="page" mode="out-in">
-      <div v-if="fetchingAssignments" class="mt-4">
-        <Skeleton class="h-4 w-[300px]"/>
-        <Skeleton class="h-4 w-[250px] mt-2"/>
-        <Skeleton class="h-4 w-[200px] mt-2"/>
+          <div class="mt-4 space-y-4" v-else>
+            <Card v-for="assignment in assignments" :key="assignment.id">
+              <CardHeader>
+                <span class="font-semibold">{{ assignment.title }}</span>
+              </CardHeader>
+              <CardContent>
+                <article v-html="md.render(assignment.description)" class="prose w-full max-w-full"/>
+                <hr class="my-4">
+                <div v-if="assignment.subnets.length > 0" class="mt-4 space-y-4">
+                  <div v-for="subnet in assignment.subnets" :key="subnet.id"
+                       :class="{ 'opacity-20': subnet.is_completed }">
+                    <div class="flex items-center gap-2">
+                      <Icon :name="subnet.icon || 'heroicons-solid:server'" class="h-5 w-5"/>
+                      <NuxtLink :to="'/subnets/' + subnet.id" class="font-medium">{{ subnet.name }}</NuxtLink>
+                      <Badge v-if="subnet.is_completed" variant="success">Completed</Badge>
+                      <Badge v-else>{{ subnet.progress }}%</Badge>
+                    </div>
+                    <Progress class="mt-2" :model-value="subnet.progress"></Progress>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </Transition>
       </div>
-      <div class="mt-4 space-y-4" v-else>
-        <Card v-for="assignment in assignments" :key="assignment.id">
-          <CardHeader>
-            <span class="font-semibold">{{ assignment.title }}</span>
+
+      <div class="col-span-3">
+        <Card class="mt-8 sticky top-8">
+          <CardHeader class="font-semibold">
+            Online ({{ authStore.online?.length }})
           </CardHeader>
           <CardContent>
-            <article v-html="md.render(assignment.description)" class="prose w-full max-w-full"/>
-            <hr class="my-4">
-            <div v-if="assignment.subnets.length > 0" class="mt-4 space-y-4">
-              <div v-for="subnet in assignment.subnets" :key="subnet.id" :class="{ 'opacity-20': subnet.is_completed }">
-                <div class="flex items-center gap-2">
-                  <Icon :name="subnet.icon || 'heroicons-solid:server'" class="h-5 w-5"/>
-                  <NuxtLink :to="'/subnets/' + subnet.id" class="font-medium">{{ subnet.name }}</NuxtLink>
-                  <Badge v-if="subnet.is_completed" variant="success">Completed</Badge>
-                  <Badge v-else>{{ subnet.progress }}%</Badge>
-                </div>
-                <Progress class="mt-2" :model-value="subnet.progress"></Progress>
+            <ScrollArea class="h-fit max-h-[calc(100vh-21rem)]">
+              <div class="flex items-center gap-2" v-for="user in authStore.online">
+                <span class="text-sm">
+                  {{ user.name }}
+                </span>
+                <img class="h-8 w-8 rounded-full border-2 border-gray-300"
+                     :src="`https://ui-avatars.com/api/?name=${ user.name }`" alt="">
               </div>
-            </div>
+            </ScrollArea>
           </CardContent>
         </Card>
       </div>
-    </Transition>
+    </div>
   </div>
 </template>
 

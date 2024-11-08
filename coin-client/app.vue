@@ -4,14 +4,7 @@ import { Toaster } from "@/components/ui/sonner";
 useHead({
   titleTemplate: (titleChunk) => {
     return titleChunk ? `${ titleChunk } - Intern` : "Intern";
-  },
-  link: [
-    {
-      rel: "icon",
-      type: "image/png",
-      href: "https://img.icons8.com/cotton/64/graduation-cap--v2.png"
-    }
-  ]
+  }
 });
 </script>
 

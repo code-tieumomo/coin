@@ -14,6 +14,7 @@ import { format } from "date-fns";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-vue-next";
 import TimeTracker from "~/components/TimeTracker.vue";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 const authStore = useAuthStore();
 const user = authStore.getUser;
@@ -63,7 +64,7 @@ const logout = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
+  <ScrollArea class="h-screen flex flex-col">
     <header class="py-3 border-b shadow-sm">
       <div class="container mx-auto flex items-center gap-4 justify-between">
         <NuxtLink to="/">
@@ -134,7 +135,7 @@ const logout = async () => {
         <div class="text-center">...</div>
       </div>
     </NotificationDrawer>
-  </div>
+  </ScrollArea>
 </template>
 
 <style scoped>

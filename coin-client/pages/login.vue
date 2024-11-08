@@ -25,8 +25,7 @@ const handleLogin = async () => {
       </h1>
 
       <p class="text-sm w-5/6">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias aliquam amet animi architecto consequuntur
-        eligendi eos, eum ex iste numquam odio officia quis, recusandae rem sapiente soluta tempora voluptate.
+        I like to look at one or two random quotes each morning. It can be a good exercise for journaling prompts.
       </p>
     </div>
     <div class="w-1/2 flex flex-col items-center justify-center">
@@ -40,19 +39,19 @@ const handleLogin = async () => {
       </Button>
       <p class="px-12 text-center text-xs text-gray-500 max-w-xs">
         By clicking continue, you agree to our
-        <a
-          href="/terms"
+        <NuxtLink
+          to="/terms"
           class="underline underline-offset-4 hover:text-gray-700"
         >
           Terms of Service
-        </a>
+        </NuxtLink>
         and
-        <a
-          href="/privacy"
+        <NuxtLink
+          to="/privacy"
           class="underline underline-offset-4 hover:text-gray-700"
         >
           Privacy Policy
-        </a>
+        </NuxtLink>
         .
       </p>
     </div>

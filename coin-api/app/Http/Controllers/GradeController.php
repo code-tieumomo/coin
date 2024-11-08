@@ -50,7 +50,11 @@ class GradeController extends Controller
         $notification = $user->notifications()->create([
             'title' => 'Your submission has been graded.',
             'type' => 'success',
-            'content' => 'Your submission in ' . $subnet->name . ' has been graded. You received a grade of ' . $request->get('grade'),
+            'content' => 'Your submission in ' 
+                . $subnet->name 
+                . ' has been graded. You received a grade of ' 
+                . $request->get('grade')
+                . '. You can go to home page (and refresh) to see the progress of your assignment.',
         ]);
         PrivateNotification::dispatch($notification);
 
